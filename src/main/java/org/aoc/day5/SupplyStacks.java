@@ -8,8 +8,9 @@ import java.util.Stack;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class SupplyStacks implements AOC<String> {
+public class SupplyStacks implements AOC<List<List<Integer>>, String> {
     private final List<Stack<Character>> stackList;
 
     public SupplyStacks(List<Stack<Character>> stackList) {
@@ -17,26 +18,34 @@ public class SupplyStacks implements AOC<String> {
     }
 
     public static void main(String[] args) {
-        List<String> input = AOC.getInput("src/main/resources/day5.txt");
-        SupplyStacks df1 = new SupplyStacks(getStacks());
-        SupplyStacks df2 = new SupplyStacks(getStacks());
+        SupplyStacks ss1 = new SupplyStacks(getStacks());
+        SupplyStacks ss2 = new SupplyStacks(getStacks());
+
+        // Process Input
+        List<List<Integer>> input = ss1.processInput(AOC.getInput("src/main/resources/day5.txt"));
 
         // Part 1
-        System.out.println(df1.partOne(input));
+        System.out.println(ss1.partOne(input));
 
         // Part 2
-        System.out.println(df2.partTwo(input));
+        System.out.println(ss2.partTwo(input));
     }
 
     @Override
-    public String partOne(List<String> input) {
-        processInput(input).forEach(this::rearrangePartOne);
+    public List<List<Integer>> processInput(Stream<String> input) {
+        return input.map(this::processMove)
+                .toList();
+    }
+
+    @Override
+    public String partOne(List<List<Integer>> input) {
+        input.forEach(this::rearrangePartOne);
         return getTopOfEachStack();
     }
 
     @Override
-    public String partTwo(List<String> input) {
-        processInput(input).forEach(this::rearrangePartTwo);
+    public String partTwo(List<List<Integer>> input) {
+        input.forEach(this::rearrangePartTwo);
         return getTopOfEachStack();
     }
 
@@ -78,17 +87,11 @@ public class SupplyStacks implements AOC<String> {
 
     }
 
-    public List<Integer> processMove(String move) {
+    private List<Integer> processMove(String move) {
         return Arrays.stream(move.split("[a-z ]"))
                 .filter(s -> !s.isBlank())
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
-    }
-
-    private List<List<Integer>> processInput(List<String> input) {
-        return input.stream()
-                .map(this::processMove)
-                .toList();
     }
 
     private static List<Stack<Character>> getStacks() {

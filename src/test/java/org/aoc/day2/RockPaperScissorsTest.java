@@ -1,27 +1,30 @@
 package org.aoc.day2;
 
-import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RockPaperScissorsTest {
-    List<String> input;
     RockPaperScissors rps;
+    List<List<String>> input;
 
     @BeforeEach
     void setUp() {
-        input = AOC.getInput("src/test/resources/day2.txt");
         rps = new RockPaperScissors();
+        input = List.of(
+                List.of("A", "Y"),
+                List.of("B", "X"),
+                List.of("C", "Z"));
     }
 
     @Test
     void shouldProcessInput() {
         // Arrange
-        List<String> input = List.of("A Y", "B X", "C Z");
+        Stream<String> input = Stream.of("A Y", "B X", "C Z");
         List<String> round1 = List.of("A", "Y");
         List<String> round2 = List.of("B", "X");
         List<String> round3 = List.of("C", "Z");

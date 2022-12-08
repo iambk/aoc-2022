@@ -6,10 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CampCleanup implements AOC<Long> {
+public class CampCleanup implements AOC<List<List<Integer>>, Long> {
     public static void main(String[] args) {
-        List<String> input = AOC.getInput("src/main/resources/day4.txt");
         CampCleanup cc = new CampCleanup();
+
+        // Process input
+        List<List<Integer>> input = cc.processInput(AOC.getInput("src/main/resources/day4.txt"));
 
         // Part 1
         System.out.println(cc.partOne(input));
@@ -19,25 +21,26 @@ public class CampCleanup implements AOC<Long> {
     }
 
     @Override
-    public Long partOne(List<String> input) {
-        return processInput(input)
+    public List<List<Integer>> processInput(Stream<String> input) {
+        return input.map(s -> s.split("[-,]"))
+                .map(strings -> Arrays.stream(strings)
+                        .map(Integer::parseInt)
+                        .toList())
+                .toList();
+    }
+
+    @Override
+    public Long partOne(List<List<Integer>> input) {
+        return input.stream()
                 .filter(this::encompassesPartOne)
                 .count();
     }
 
     @Override
-    public Long partTwo(List<String> input) {
-        return processInput(input)
+    public Long partTwo(List<List<Integer>> input) {
+        return input.stream()
                 .filter(this::encompassesPartTwo)
                 .count();
-    }
-
-    public static Stream<List<Integer>> processInput(List<String> input) {
-        return input.stream()
-                .map(s -> s.split("[-,]"))
-                .map(strings -> Arrays.stream(strings)
-                        .map(Integer::parseInt)
-                        .toList());
     }
 
     private boolean encompassesPartOne(List<Integer> pair) {

@@ -5,14 +5,17 @@ import org.aoc.AOC;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.aoc.day2.Constants.MOVE_MAP;
 import static org.aoc.day2.Constants.RESULT_MAP;
 
-public class RockPaperScissors implements AOC<Integer> {
+public class RockPaperScissors implements AOC<List<List<String>>, Integer> {
     public static void main(String[] args) {
-        List<String> input = AOC.getInput("src/main/resources/day2.txt");
         RockPaperScissors rps = new RockPaperScissors();
+
+        // Process input
+        List<List<String>> input = rps.processInput(AOC.getInput("src/main/resources/day2.txt"));
 
         // Part 1
         System.out.println(rps.partOne(input));
@@ -22,26 +25,24 @@ public class RockPaperScissors implements AOC<Integer> {
     }
 
     @Override
-    public Integer partOne(List<String> input) {
-        return processInput(input)
-                .stream()
+    public List<List<String>> processInput(Stream<String> input) {
+        return input.map(s -> s.split(" "))
+                .map(Arrays::asList)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer partOne(List<List<String>> input) {
+        return input.stream()
                 .map(RockPaperScissors::getScorePartOne)
                 .reduce(0, Integer::sum);
     }
 
     @Override
-    public Integer partTwo(List<String> input) {
-        return processInput(input)
-                .stream()
+    public Integer partTwo(List<List<String>> input) {
+        return input.stream()
                 .map(RockPaperScissors::getScorePartTwo)
                 .reduce(0, Integer::sum);
-    }
-
-    public List<List<String>> processInput(List<String> input) {
-        return input.stream()
-                .map(s -> s.split(" "))
-                .map(Arrays::asList)
-                .collect(Collectors.toList());
     }
 
     private static Integer getScorePartOne(List<String> move) {

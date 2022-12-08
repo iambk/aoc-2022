@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class CalorieCounting implements AOC<Integer> {
+public class CalorieCounting implements AOC<List<List<Integer>>, Integer> {
     public static void main(String[] args) {
-        List<String> input = AOC.getInput("src/main/resources/day1.txt");
         CalorieCounting cc = new CalorieCounting();
+
+        // Process input
+        List<List<Integer>> input = cc.processInput(AOC.getInput("src/main/resources/day1.txt"));
 
         // Part 1
         System.out.println(cc.partOne(input));
@@ -20,20 +23,7 @@ public class CalorieCounting implements AOC<Integer> {
     }
 
     @Override
-    public Integer partOne(List<String> input) {
-        return Collections.max(countCalories(processInput(input)));
-    }
-
-    @Override
-    public Integer partTwo(List<String> input) {
-        List<Integer> calories = countCalories(processInput(input));
-        Collections.sort(calories);
-        return calories.subList(calories.size() - 3, calories.size())
-                .stream()
-                .reduce(0, Integer::sum);
-    }
-
-    public List<List<Integer>> processInput(List<String> input) {
+    public List<List<Integer>> processInput(Stream<String> input) {
         List<List<Integer>> allElfFoodCalories = new ArrayList<>();
         List<Integer> individualElfFoodCalories = new ArrayList<>();
         input.forEach(item -> {
@@ -46,6 +36,20 @@ public class CalorieCounting implements AOC<Integer> {
         });
         allElfFoodCalories.add(individualElfFoodCalories);
         return allElfFoodCalories;
+    }
+
+    @Override
+    public Integer partOne(List<List<Integer>> input) {
+        return Collections.max(countCalories(input));
+    }
+
+    @Override
+    public Integer partTwo(List<List<Integer>> input) {
+        List<Integer> calories = countCalories(input);
+        Collections.sort(calories);
+        return calories.subList(calories.size() - 3, calories.size())
+                .stream()
+                .reduce(0, Integer::sum);
     }
 
     private static List<Integer> countCalories(List<List<Integer>> input) {

@@ -1,6 +1,5 @@
 package org.aoc.day4;
 
-import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,26 +9,33 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CampCleanupTest {
-    List<String> input;
     CampCleanup cc;
+    List<List<Integer>> input;
 
     @BeforeEach
     void setUp() {
-        input = AOC.getInput("src/test/resources/day4.txt");
         cc = new CampCleanup();
+        input = List.of(
+                List.of(2, 4, 6, 8),
+                List.of(2, 3, 4, 5),
+                List.of(5, 7, 7, 9),
+                List.of(2, 8, 3, 7),
+                List.of(6, 6, 4, 6),
+                List.of(2, 6, 4, 8)
+        );
     }
 
     @Test
     void shouldProcessInput() {
         // Arrange
-        List<String> input = List.of("2-4,6-8", "2-3,4-5");
-        Stream<List<Integer>> expectedInput = Stream.of(List.of(2, 4, 6, 8), List.of(2, 3, 4, 5));
+        Stream<String> input = Stream.of("2-4,6-8", "2-3,4-5");
+        List<List<Integer>> expectedInput = List.of(List.of(2, 4, 6, 8), List.of(2, 3, 4, 5));
 
         // Act
-        Stream<List<Integer>> processedInput = CampCleanup.processInput(input);
+        List<List<Integer>> processedInput = cc.processInput(input);
 
         // Assert
-        assertEquals(expectedInput.toList(), processedInput.toList());
+        assertEquals(expectedInput, processedInput);
     }
 
     @Test

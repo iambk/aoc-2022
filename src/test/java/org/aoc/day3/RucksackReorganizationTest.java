@@ -1,21 +1,40 @@
 package org.aoc.day3;
 
-import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RucksackReorganizationTest {
-    List<String> input;
     RucksackReorganization rr;
+    List<String> input;
 
     @BeforeEach
     void setUp() {
-        input = AOC.getInput("src/test/resources/day3.txt");
         rr = new RucksackReorganization();
+        input = List.of(
+                "vJrwpWtwJgWrhcsFMMfFFhFp",
+                "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL",
+                "PmmdzqPrVvPwwTWBwg",
+                "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn",
+                "ttgJtRGJQctTZtZT",
+                "CrZsJsPPZsGzwwsLwLmpwMDw");
+    }
+
+    @Test
+    void shouldProcessInput() {
+        // Arrange
+        Stream<String> input = Stream.of("vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL");
+        List<String> expectedInput = List.of("vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL");
+
+        // Act
+        List<String> processedInput = rr.processInput(input);
+
+        // Assert
+        assertEquals(expectedInput, processedInput);
     }
 
     @Test

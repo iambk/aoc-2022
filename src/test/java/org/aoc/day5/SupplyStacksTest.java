@@ -1,20 +1,20 @@
 package org.aoc.day5;
 
-import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SupplyStacksTest {
+    SupplyStacks ss;
     Stack<Character> s1;
     Stack<Character> s2;
     Stack<Character> s3;
-    List<String> input;
-    SupplyStacks df;
+    List<List<Integer>> input;
 
     @BeforeEach
     void setUp() {
@@ -27,18 +27,23 @@ class SupplyStacksTest {
         s2.push('C');
         s2.push('D');
         s3.push('P');
-        input = AOC.getInput("src/test/resources/day5.txt");
-        df = new SupplyStacks(List.of(s1, s2, s3));
+        ss = new SupplyStacks(List.of(s1, s2, s3));
+        input = List.of(
+                List.of(1, 2, 1),
+                List.of(3, 1, 3),
+                List.of(2, 2, 1),
+                List.of(1, 1, 2)
+        );
     }
 
     @Test
     void shouldProcessMove() {
         // Arrange
-        String move = "move 1 from 2 to 3";
-        List<Integer> expectedInput = List.of(1, 2, 3);
+        Stream<String> move = Stream.of("move 1 from 2 to 3", "move 3 from 1 to 3");
+        List<List<Integer>> expectedInput = List.of(List.of(1, 2, 3), List.of(3, 1, 3));
 
         // Act
-        List<Integer> processedInput = df.processMove(move);
+        List<List<Integer>> processedInput = ss.processInput(move);
 
         // Assert
         assertEquals(expectedInput, processedInput);
@@ -58,7 +63,7 @@ class SupplyStacksTest {
         expectedS3.push('P');
 
         // Act
-        df.rearrangePartOne(List.of(1, 2, 1));
+        ss.rearrangePartOne(List.of(1, 2, 1));
 
         // Assert
         assertEquals(expectedS1, s1);
@@ -72,7 +77,7 @@ class SupplyStacksTest {
         String expected = "CMZ";
 
         // Act
-        String actual = df.partOne(input);
+        String actual = ss.partOne(input);
 
         // Assert
         assertEquals(expected, actual);
@@ -90,7 +95,7 @@ class SupplyStacksTest {
         s2.push('M');
         s2.push('C');
         s3.push('P');
-        SupplyStacks df = new SupplyStacks(List.of(s1, s2, s3));
+        SupplyStacks ss = new SupplyStacks(List.of(s1, s2, s3));
         Stack<Character> expectedS1 = new Stack<>();
         Stack<Character> expectedS2 = new Stack<>();
         Stack<Character> expectedS3 = new Stack<>();
@@ -102,7 +107,7 @@ class SupplyStacksTest {
         expectedS3.push('D');
 
         // Act
-        df.rearrangePartTwo(List.of(3, 1, 3));
+        ss.rearrangePartTwo(List.of(3, 1, 3));
 
         // Assert
         assertEquals(expectedS1, s1);
@@ -116,7 +121,7 @@ class SupplyStacksTest {
         String expected = "MCD";
 
         // Act
-        String actual = df.partTwo(input);
+        String actual = ss.partTwo(input);
 
         // Assert
         assertEquals(expected, actual);

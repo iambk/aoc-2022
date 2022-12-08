@@ -4,17 +4,25 @@ import org.aoc.AOC;
 
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class RucksackReorganization implements AOC<Integer> {
+public class RucksackReorganization implements AOC<List<String>, Integer> {
     public static void main(String[] args) {
-        List<String> input = AOC.getInput("src/main/resources/day3.txt");
         RucksackReorganization rr = new RucksackReorganization();
+
+        // Process input
+        List<String> input = rr.processInput(AOC.getInput("src/main/resources/day3.txt"));
 
         // Part 1
         System.out.println(rr.partOne(input));
 
         // Part 2
         System.out.println(rr.partTwo(input));
+    }
+
+    @Override
+    public List<String> processInput(Stream<String> input) {
+        return input.toList();
     }
 
     @Override

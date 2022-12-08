@@ -1,27 +1,32 @@
 package org.aoc.day1;
 
-import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CalorieCountingTest {
-    List<String> input;
     CalorieCounting cc;
+    List<List<Integer>> input;
 
     @BeforeEach
     void setUp() {
-        input = AOC.getInput("src/test/resources/day1.txt");
         cc = new CalorieCounting();
+        input = List.of(
+                List.of(1000, 2000, 3000),
+                List.of(4000),
+                List.of(5000, 6000),
+                List.of(7000, 8000, 9000),
+                List.of(10000));
     }
 
     @Test
     void shouldProcessInput() {
         // Arrange
-        List<String> input = List.of("1000", "2000", "3000", "", "4000");
+        Stream<String> input = Stream.of("1000", "2000", "3000", "", "4000");
         List<Integer> elf1 = List.of(1000, 2000, 3000);
         List<Integer> elf2 = List.of(4000);
         List<List<Integer>> expectedInput = List.of(elf1, elf2);

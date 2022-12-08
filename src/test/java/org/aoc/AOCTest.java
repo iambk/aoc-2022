@@ -13,7 +13,7 @@ class AOCTest {
         String expectedLine = "Hello, World!";
 
         // Act
-        List<String> lines = AOC.getInput("src/test/resources/fileWithSingleLine.txt");
+        List<String> lines = AOC.getInput("src/test/resources/fileWithSingleLine.txt").toList();
 
         // Assert
         assertEquals(1, lines.size());
@@ -28,7 +28,7 @@ class AOCTest {
         String expectedLine3 = "line 3";
 
         // Act
-        List<String> lines = AOC.getInput("src/test/resources/fileWithMultipleLines.txt");
+        List<String> lines = AOC.getInput("src/test/resources/fileWithMultipleLines.txt").toList();
 
         // Assert
         assertEquals(3, lines.size());
