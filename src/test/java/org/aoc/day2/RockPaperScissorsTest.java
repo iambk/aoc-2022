@@ -1,31 +1,37 @@
 package org.aoc.day2;
 
+import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RockPaperScissorsTest {
-    List<String> round1 = List.of("A", "Y");
-    List<String> round2 = List.of("B", "X");
-    List<String> round3 = List.of("C", "Z");
-    List<List<String>> input;
+    List<String> input;
+    RockPaperScissors rps;
 
     @BeforeEach
     void setUp() {
-        input = List.of(round1, round2, round3);
+        input = AOC.getInput("src/test/resources/day2.txt");
+        rps = new RockPaperScissors();
     }
 
     @Test
-    void shouldProcessInput() throws IOException {
+    void shouldProcessInput() {
+        // Arrange
+        List<String> input = List.of("A Y", "B X", "C Z");
+        List<String> round1 = List.of("A", "Y");
+        List<String> round2 = List.of("B", "X");
+        List<String> round3 = List.of("C", "Z");
+        List<List<String>> expectedInput = List.of(round1, round2, round3);
+
         // Act
-        List<List<String>> processedInput = RockPaperScissors.processInput("src/test/resources/day2.txt");
+        List<List<String>> processedInput = rps.processInput(input);
 
         // Assert
-        assertEquals(input, processedInput);
+        assertEquals(expectedInput, processedInput);
     }
 
     @Test
@@ -34,7 +40,7 @@ class RockPaperScissorsTest {
         int expectedScore = 15;
 
         // Act
-        int actualScore = RockPaperScissors.evaluatePartOne(input);
+        int actualScore = rps.partOne(input);
 
         // Assert
         assertEquals(expectedScore, actualScore);
@@ -46,7 +52,7 @@ class RockPaperScissorsTest {
         int expectedScore = 12;
 
         // Act
-        int actualScore = RockPaperScissors.evaluatePartTwo(input);
+        int actualScore = rps.partTwo(input);
 
         // Assert
         assertEquals(expectedScore, actualScore);

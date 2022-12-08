@@ -1,55 +1,56 @@
 package org.aoc.day4;
 
+import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CampCleanupTest {
-    List<Integer> pair1 = List.of(2, 4, 6, 8);
-    List<Integer> pair2 = List.of(2, 3, 4, 5);
-    List<Integer> pair3 = List.of(5, 7, 7, 9);
-    List<Integer> pair4 = List.of(2, 8, 3, 7);
-    List<Integer> pair5 = List.of(6, 6, 4, 6);
-    List<Integer> pair6 = List.of(2, 6, 4, 8);
-    List<List<Integer>> input;
+    List<String> input;
+    CampCleanup cc;
 
     @BeforeEach
     void setUp() {
-        input = List.of(pair1, pair2, pair3, pair4, pair5, pair6);
+        input = AOC.getInput("src/test/resources/day4.txt");
+        cc = new CampCleanup();
     }
 
     @Test
-    void shouldProcessInput() throws IOException {
+    void shouldProcessInput() {
+        // Arrange
+        List<String> input = List.of("2-4,6-8", "2-3,4-5");
+        Stream<List<Integer>> expectedInput = Stream.of(List.of(2, 4, 6, 8), List.of(2, 3, 4, 5));
+
         // Act
-        List<List<Integer>> processedInput = CampCleanup.processInput("src/test/resources/day4.txt");
+        Stream<List<Integer>> processedInput = CampCleanup.processInput(input);
 
         // Assert
-        assertEquals(input, processedInput);
+        assertEquals(expectedInput.toList(), processedInput.toList());
     }
 
     @Test
-    void shouldCalculatePartOne() throws IOException {
+    void shouldCalculatePartOne() {
         // Arrange
-        int expected = 2;
+        Long expected = 2L;
 
         // Act
-        int actual = CampCleanup.partOne(CampCleanup.processInput("src/test/resources/day4.txt"));
+        Long actual = cc.partOne(input);
 
         // Assert
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldCalculatePartTwo() throws IOException {
+    void shouldCalculatePartTwo() {
         // Arrange
-        int expected = 4;
+        Long expected = 4L;
 
         // Act
-        int actual = CampCleanup.partTwo(CampCleanup.processInput("src/test/resources/day4.txt"));
+        Long actual = cc.partTwo(input);
 
         // Assert
         assertEquals(expected, actual);

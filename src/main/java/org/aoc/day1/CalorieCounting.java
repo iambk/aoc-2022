@@ -1,54 +1,56 @@
 package org.aoc.day1;
 
-import org.aoc.utils.FileReader;
+import org.aoc.AOC;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class CalorieCounting {
-    public static List<Integer> countCalories(List<List<Integer>> input) {
-        List<Integer> elfCalorieList = new ArrayList<>();
-        for (List<Integer> individualElfFoodList : input) {
-            int sum = individualElfFoodList.stream()
-                    .mapToInt(Integer::intValue)
-                    .sum();
-            elfCalorieList.add(sum);
-        }
-        return elfCalorieList;
+public class CalorieCounting implements AOC<Integer> {
+    public static void main(String[] args) {
+        List<String> input = AOC.getInput("src/main/resources/day1.txt");
+        CalorieCounting cc = new CalorieCounting();
+
+        // Part 1
+        System.out.println(cc.partOne(input));
+
+        // Part 2
+        System.out.println(cc.partTwo(input));
     }
 
-    public static List<List<Integer>> processInput(String pathToFile) throws IOException {
-        List<String> input = FileReader.getLines(pathToFile).toList();
+    @Override
+    public Integer partOne(List<String> input) {
+        return Collections.max(countCalories(processInput(input)));
+    }
 
+    @Override
+    public Integer partTwo(List<String> input) {
+        List<Integer> calories = countCalories(processInput(input));
+        Collections.sort(calories);
+        return calories.subList(calories.size() - 3, calories.size())
+                .stream()
+                .reduce(0, Integer::sum);
+    }
+
+    public List<List<Integer>> processInput(List<String> input) {
         List<List<Integer>> allElfFoodCalories = new ArrayList<>();
         List<Integer> individualElfFoodCalories = new ArrayList<>();
-        for (String item : input) {
+        input.forEach(item -> {
             if (item.length() > 0) {
                 individualElfFoodCalories.add(Integer.parseInt(item));
-            }
-            else {
+            } else {
                 allElfFoodCalories.add(new ArrayList<>(individualElfFoodCalories));
                 individualElfFoodCalories.clear();
             }
-        }
+        });
         allElfFoodCalories.add(individualElfFoodCalories);
         return allElfFoodCalories;
     }
 
-    public static void main(String[] args) throws IOException {
-        List<List<Integer>> input = processInput("src/main/resources/day1.txt");
-        List<Integer> elfCalorieList = countCalories(input);
-
-        // Part 1
-        System.out.println(Collections.max(elfCalorieList));
-
-        // Part 2
-        Collections.sort(elfCalorieList);
-        Integer max1 = elfCalorieList.get(elfCalorieList.size() - 1);
-        Integer max2 = elfCalorieList.get(elfCalorieList.size() - 2);
-        Integer max3 = elfCalorieList.get(elfCalorieList.size() - 3);
-        System.out.println(max1 + max2 + max3);
+    private static List<Integer> countCalories(List<List<Integer>> input) {
+        return input.stream()
+                .map(foodList -> foodList.stream().reduce(0, Integer::sum))
+                .collect(Collectors.toList());
     }
 }

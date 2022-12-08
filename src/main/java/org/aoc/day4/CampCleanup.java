@@ -1,72 +1,59 @@
 package org.aoc.day4;
 
-import org.aoc.utils.FileReader;
+import org.aoc.AOC;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class CampCleanup {
-    public static void main(String[] args) throws IOException {
-        List<List<Integer>> input = processInput("src/main/resources/day4.txt");
+public class CampCleanup implements AOC<Long> {
+    public static void main(String[] args) {
+        List<String> input = AOC.getInput("src/main/resources/day4.txt");
+        CampCleanup cc = new CampCleanup();
 
         // Part 1
-        System.out.println(partOne(input));
+        System.out.println(cc.partOne(input));
 
         // Part 2
-        System.out.println(partTwo(input));
+        System.out.println(cc.partTwo(input));
     }
 
-    public static List<List<Integer>> processInput(String pathToFile) throws IOException {
-        List<String> input = FileReader.getLines(pathToFile).toList();
-
-        List<List<Integer>> pairs = new ArrayList<>();
-        List<Integer> pair = new ArrayList<>();
-        for (String item : input) {
-            String[] ids = item.split("[-,]");
-            for (String id : ids) {
-                pair.add(Integer.parseInt(id));
-            }
-            pairs.add(new ArrayList<>(pair));
-            pair.clear();
-        }
-        return pairs;
+    @Override
+    public Long partOne(List<String> input) {
+        return processInput(input)
+                .filter(this::encompassesPartOne)
+                .count();
     }
 
-    public static int partOne(List<List<Integer>> input) {
-        int total = 0;
-        for (List<Integer> pair : input) {
-            Integer p1 = pair.get(0);
-            Integer p2 = pair.get(1);
-            Integer p3 = pair.get(2);
-            Integer p4 = pair.get(3);
-            if (encompassesPartOne(p1, p2, p3, p4)) {
-                total++;
-            }
-        }
-        return total;
+    @Override
+    public Long partTwo(List<String> input) {
+        return processInput(input)
+                .filter(this::encompassesPartTwo)
+                .count();
     }
 
-    private static boolean encompassesPartOne(Integer p1, Integer p2, Integer p3, Integer p4) {
+    public static Stream<List<Integer>> processInput(List<String> input) {
+        return input.stream()
+                .map(s -> s.split("[-,]"))
+                .map(strings -> Arrays.stream(strings)
+                        .map(Integer::parseInt)
+                        .toList());
+    }
+
+    private boolean encompassesPartOne(List<Integer> pair) {
+        Integer p1 = pair.get(0);
+        Integer p2 = pair.get(1);
+        Integer p3 = pair.get(2);
+        Integer p4 = pair.get(3);
         if (p1 >= p3 && p1 <= p4 && p2 >= p3 && p2 <= p4) return true;
         return p3 >= p1 && p3 <= p2 && p4 >= p1 && p4 <= p2;
     }
 
-    public static int partTwo(List<List<Integer>> input) {
-        int total = 0;
-        for (List<Integer> pair : input) {
-            Integer p1 = pair.get(0);
-            Integer p2 = pair.get(1);
-            Integer p3 = pair.get(2);
-            Integer p4 = pair.get(3);
-            if (encompassesPartTwo(p1, p2, p3, p4)) {
-                total++;
-            }
-        }
-        return total;
-    }
-
-    private static boolean encompassesPartTwo(Integer p1, Integer p2, Integer p3, Integer p4) {
+    private boolean encompassesPartTwo(List<Integer> pair) {
+        Integer p1 = pair.get(0);
+        Integer p2 = pair.get(1);
+        Integer p3 = pair.get(2);
+        Integer p4 = pair.get(3);
         if ((p1 >= p3 && p1 <= p4) || (p2 >= p3 && p2 <= p4)) return true;
         return ((p3 >= p1 && p3 <= p2) || (p4 >= p1 && p4 <= p2));
     }

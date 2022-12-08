@@ -1,43 +1,31 @@
 package org.aoc.day3;
 
+import org.aoc.AOC;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RucksackReorganizationTest {
-    String s1 = "vJrwpWtwJgWrhcsFMMfFFhFp";
-    String s2 = "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL";
-    String s3 = "PmmdzqPrVvPwwTWBwg";
-    String s4 = "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn";
-    String s5 = "ttgJtRGJQctTZtZT";
-    String s6 = "CrZsJsPPZsGzwwsLwLmpwMDw";
     List<String> input;
+    RucksackReorganization rr;
 
     @BeforeEach
     void setUp() {
-        input = List.of(s1, s2, s3, s4, s5, s6);
-    }
-
-    @Test
-    void shouldProcessInput() throws IOException {
-        // Act
-        List<String> processedInput = RucksackReorganization.processInput("src/test/resources/day3.txt");
-
-        // Assert
-        assertEquals(input, processedInput);
+        input = AOC.getInput("src/test/resources/day3.txt");
+        rr = new RucksackReorganization();
     }
 
     @Test
     void shouldReturnPriorityItemPartOne() {
         // Arrange
+        String input = "vJrwpWtwJgWrhcsFMMfFFhFp";
         Character expected = 'p';
 
         // Act
-        Character actual = RucksackReorganization.getPriorityItemPartOne(s1);
+        Character actual = rr.getPriorityItemPartOne(input);
 
         // Assert
         assertEquals(expected, actual);
@@ -50,7 +38,7 @@ class RucksackReorganizationTest {
         int expected = 16;
 
         // Act
-        int actual = RucksackReorganization.getPriorityValue(input);
+        int actual = rr.getPriorityValue(input);
 
         // Assert
         assertEquals(expected, actual);
@@ -62,7 +50,7 @@ class RucksackReorganizationTest {
         int expected = 157;
 
         // Act
-        int actual = RucksackReorganization.countPriorityPartOne(input);
+        int actual = rr.partOne(input);
 
         // Assert
         assertEquals(expected, actual);
@@ -71,11 +59,13 @@ class RucksackReorganizationTest {
     @Test
     void shouldReturnPriorityItemPartTwo() {
         // Arrange
-        List<String> input = List.of(s1, s2, s3);
+        List<String> input = List.of("vJrwpWtwJgWrhcsFMMfFFhFp",
+                "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL",
+                "PmmdzqPrVvPwwTWBwg");
         Character expected = 'r';
 
         // Act
-        Character actual = RucksackReorganization.getPriorityItemPartTwo(input);
+        Character actual = rr.getPriorityItemPartTwo(input);
 
         // Assert
         assertEquals(expected, actual);
@@ -88,7 +78,7 @@ class RucksackReorganizationTest {
         int expected = 70;
 
         // Act
-        int actual = RucksackReorganization.countPriorityPartTwo(input);
+        int actual = rr.partTwo(input);
 
         // Assert
         assertEquals(expected, actual);
