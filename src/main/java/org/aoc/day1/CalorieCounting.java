@@ -8,31 +8,47 @@ import java.util.Collections;
 import java.util.List;
 
 public class CalorieCounting {
-    public static List<Integer> countMaxCalories(String file) throws IOException {
-        List<String> itemCollection = FileReader.getLines(file).toList();
+    public static List<Integer> countCalories(List<List<Integer>> input) {
+        List<Integer> elfCalorieList = new ArrayList<>();
+        for (List<Integer> individualElfFoodList : input) {
+            int sum = individualElfFoodList.stream()
+                    .mapToInt(Integer::intValue)
+                    .sum();
+            elfCalorieList.add(sum);
+        }
+        return elfCalorieList;
+    }
 
-        int maxCalories = 0, calories = 0;
-        List<Integer> totalCalories = new ArrayList<>();
-        for (String item : itemCollection) {
+    public static List<List<Integer>> processInput(String pathToFile) throws IOException {
+        List<String> input = FileReader.getLines(pathToFile).toList();
+
+        List<List<Integer>> allElfFoodCalories = new ArrayList<>();
+        List<Integer> individualElfFoodCalories = new ArrayList<>();
+        for (String item : input) {
             if (item.length() > 0) {
-                calories += Integer.parseInt(item);
-            } else {
-                if (calories > maxCalories) maxCalories = calories;
-                totalCalories.add(calories);
-                calories = 0;
+                individualElfFoodCalories.add(Integer.parseInt(item));
+            }
+            else {
+                allElfFoodCalories.add(new ArrayList<>(individualElfFoodCalories));
+                individualElfFoodCalories.clear();
             }
         }
-
-        Collections.sort(totalCalories);
-        return totalCalories;
+        allElfFoodCalories.add(individualElfFoodCalories);
+        return allElfFoodCalories;
     }
 
     public static void main(String[] args) throws IOException {
-        List<Integer> totalCalories = CalorieCounting.countMaxCalories("src/main/resources/day1.txt");
-        Integer max1 = totalCalories.get(totalCalories.size() - 1);
-        Integer max2 = totalCalories.get(totalCalories.size() - 2);
-        Integer max3 = totalCalories.get(totalCalories.size() - 3);
-        System.out.println(max1);
+        List<List<Integer>> input = processInput("src/main/resources/day1.txt");
+        List<Integer> elfCalorieList = countCalories(input);
+
+        // Part 1
+        System.out.println(Collections.max(elfCalorieList));
+
+        // Part 2
+        Collections.sort(elfCalorieList);
+        Integer max1 = elfCalorieList.get(elfCalorieList.size() - 1);
+        Integer max2 = elfCalorieList.get(elfCalorieList.size() - 2);
+        Integer max3 = elfCalorieList.get(elfCalorieList.size() - 3);
         System.out.println(max1 + max2 + max3);
     }
 }

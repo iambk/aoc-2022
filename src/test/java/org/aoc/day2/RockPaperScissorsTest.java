@@ -13,7 +13,7 @@ class RockPaperScissorsTest {
         int expectedScore = 15;
 
         // Act
-        int actualScore = RockPaperScissors.evaluatePartOne("src/test/resources/day2sample.txt");
+        int actualScore = RockPaperScissors.evaluatePartOne("src/test/resources/day2.txt");
 
         // Assert
         assertEquals(expectedScore, actualScore);
@@ -25,7 +25,7 @@ class RockPaperScissorsTest {
         int expectedScore = 12;
 
         // Act
-        int actualScore = RockPaperScissors.evaluatePartTwo("src/test/resources/day2sample.txt");
+        int actualScore = RockPaperScissors.evaluatePartTwo("src/test/resources/day2.txt");
 
         // Assert
         assertEquals(expectedScore, actualScore);
