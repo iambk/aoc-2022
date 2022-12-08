@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TuningTrouble implements AOC<String, Integer> {
-    private static final int PART_ONE_LIMIT = 4;
-    private static final int PART_TWO_LIMIT = 14;
+    private static final int PART_ONE_PACKET_SIZE = 4;
+    private static final int PART_TWO_PACKET_SIZE = 14;
 
     public static void main(String[] args) {
         TuningTrouble tt = new TuningTrouble();
@@ -29,26 +29,22 @@ public class TuningTrouble implements AOC<String, Integer> {
 
     @Override
     public Integer partOne(String input) {
-        for (int i = 0; i < input.length() - PART_ONE_LIMIT; i++) {
-            int uniqueChars = input.substring(i, i + PART_ONE_LIMIT)
-                    .chars()
-                    .mapToObj(ch -> (char) ch)
-                    .collect(Collectors.toSet())
-                    .size();
-            if (uniqueChars == PART_ONE_LIMIT) return i + PART_ONE_LIMIT;
-        }
-        return 0;
+        return findStartOfPacket(input, PART_ONE_PACKET_SIZE);
     }
 
     @Override
     public Integer partTwo(String input) {
-        for (int i = 0; i < input.length() - PART_TWO_LIMIT; i++) {
-            int uniqueChars = input.substring(i, i + PART_TWO_LIMIT)
+        return findStartOfPacket(input, PART_TWO_PACKET_SIZE);
+    }
+
+    private static int findStartOfPacket(String input, int packetSize) {
+        for (int i = 0; i < input.length() - packetSize; i++) {
+            int uniqueChars = input.substring(i, i + packetSize)
                     .chars()
                     .mapToObj(ch -> (char) ch)
                     .collect(Collectors.toSet())
                     .size();
-            if (uniqueChars == PART_TWO_LIMIT) return i + PART_TWO_LIMIT;
+            if (uniqueChars == packetSize) return i + packetSize;
         }
         return 0;
     }
