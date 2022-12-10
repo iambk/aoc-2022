@@ -1,24 +1,61 @@
 package org.aoc.day09;
 
-public interface Knot {
-    int getXPosition();
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    int getYPosition();
+import java.util.Objects;
 
-    void moveUp();
+@Getter
+@AllArgsConstructor
+public class Knot {
+    private final Knot tail;
+    private Position position;
 
-    void moveDown();
+    public void moveUp() {
+        this.position = this.position.up();
+    }
 
-    void moveLeft();
+    public void moveDown() {
+        this.position = this.position.down();
+    }
 
-    void moveRight();
+    public void moveLeft() {
+        this.position = this.position.left();
+    }
 
-    default void move(String direction) {
+    public void moveRight() {
+        this.position = this.position.right();
+    }
+
+    public void move(String direction) {
         switch (direction) {
             case "U" -> moveUp();
             case "D" -> moveDown();
-            case "R" -> moveRight();
             case "L" -> moveLeft();
+            case "R" -> moveRight();
+            case "UL" -> {
+                moveUp();
+                moveLeft();
+            }
+            case "UR" -> {
+                moveUp();
+                moveRight();
+            }
+            case "DL" -> {
+                moveDown();
+                moveLeft();
+            }
+            case "DR" -> {
+                moveDown();
+                moveRight();
+            }
+        }
+    }
+
+    public void pull() {
+        if (Objects.isNull(tail)) return;
+        if (tail.position.isFarAwayFrom(this.position)) {
+            tail.move(tail.position.compareTo(this.position));
         }
     }
 }

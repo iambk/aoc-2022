@@ -2,7 +2,6 @@ package org.aoc.day09;
 
 import org.aoc.AOC;
 
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -32,47 +31,44 @@ public class RopeBridge implements AOC<List<List<String>>, Integer> {
 
     @Override
     public Integer partOne(List<List<String>> input) {
-        Head head = new Head();
-        Tail tail = new Tail(head);
-        List<Tail> tailList = List.of(tail);
-        return getTailVisits(input, head, tailList);
+        Position startingPosition = new Position(0, 0);
+        Knot tail = new Knot(null, startingPosition);
+        Knot head = new Knot(tail, startingPosition);
+        List<Knot> rope = List.of(head, tail);
+        return getTailVisits(input, rope);
     }
 
     @Override
     public Integer partTwo(List<List<String>> input) {
-        Head head = new Head();
-        Tail tail1 = new Tail(head);
-        Tail tail2 = new Tail(tail1);
-        Tail tail3 = new Tail(tail2);
-        Tail tail4 = new Tail(tail3);
-        Tail tail5 = new Tail(tail4);
-        Tail tail6 = new Tail(tail5);
-        Tail tail7 = new Tail(tail6);
-        Tail tail8 = new Tail(tail7);
-        Tail tail9 = new Tail(tail8);
-        List<Tail> tailList = List.of(tail1, tail2, tail3, tail4, tail5, tail6, tail7, tail8, tail9);
-        return getTailVisits(input, head, tailList);
+        Position startingPosition = new Position(0, 0);
+        Knot knot9 = new Knot(null, startingPosition);
+        Knot knot8 = new Knot(knot9, startingPosition);
+        Knot knot7 = new Knot(knot8, startingPosition);
+        Knot knot6 = new Knot(knot7, startingPosition);
+        Knot knot5 = new Knot(knot6, startingPosition);
+        Knot knot4 = new Knot(knot5, startingPosition);
+        Knot knot3 = new Knot(knot4, startingPosition);
+        Knot knot2 = new Knot(knot3, startingPosition);
+        Knot knot1 = new Knot(knot2, startingPosition);
+        Knot head = new Knot(knot1, startingPosition);
+        List<Knot> rope = List.of(head, knot1, knot2, knot3, knot4, knot5, knot6, knot7, knot8, knot9);
+        return getTailVisits(input, rope);
     }
 
-    private int getTailVisits(List<List<String>> input, Head head, List<Tail> tailList) {
+    private int getTailVisits(List<List<String>> input, List<Knot> rope) {
         return input.stream()
-                .map(command -> process(command, head, tailList))
+                .map(command -> process(command, rope))
                 .flatMap(Set::stream)
                 .collect(Collectors.toSet())
                 .size();
     }
 
-    private Set<AbstractMap.SimpleImmutableEntry<Integer, Integer>> process(
-            List<String> command, Head head, List<Tail> tailList) {
+    private Set<Position> process(List<String> command, List<Knot> rope) {
         return IntStream.range(0, Integer.parseInt(command.get(1)))
                 .mapToObj(idx -> {
-                    head.move(command.get(0));
-                    tailList.forEach(Tail::realign);
-                    return getTailPosition(tailList.get(tailList.size() - 1));
+                    rope.get(0).move(command.get(0));
+                    rope.forEach(Knot::pull);
+                    return rope.get(rope.size() - 1).getPosition();
                 }).collect(Collectors.toSet());
-    }
-
-    private AbstractMap.SimpleImmutableEntry<Integer, Integer> getTailPosition(Tail tail) {
-        return new AbstractMap.SimpleImmutableEntry<>(tail.getXPosition(), tail.getYPosition());
     }
 }
