@@ -3,8 +3,9 @@ package org.aoc.day11;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -13,35 +14,14 @@ class MonkeyTest {
 
     @BeforeEach
     void setUp() {
-        List<Long> items = new ArrayList<>(List.of(2L, 3L));
+        Queue<Item> items = new ArrayDeque<>(List.of(new Item(2L), new Item(3L)));
         String operator = "*";
         String operationValue = "19";
-        Integer divisibilityTest = 23;
-        Integer truthMonkey = 2;
-        Integer falseMonkey = 3;
-        Long inspects = 0L;
+        int divisibilityTest = 23;
+        int truthMonkey = 2;
+        int falseMonkey = 3;
+        long inspects = 0L;
         monkey = new Monkey(items, operator, operationValue, divisibilityTest, truthMonkey, falseMonkey, inspects);
-    }
-
-    @Test
-    void shouldCatchItem() {
-        // Act
-        monkey.catchItem(4L);
-
-        // Assert
-        assertEquals(3, monkey.getItemsSize());
-        assertEquals(2, monkey.getItem(0));
-        assertEquals(3, monkey.getItem(1));
-        assertEquals(4, monkey.getItem(2));
-    }
-
-    @Test
-    void shouldClearItems() {
-        // Act
-        monkey.clearItems();
-
-        // Assert
-        assertEquals(0, monkey.getItemsSize());
     }
 
     @Test
@@ -50,7 +30,7 @@ class MonkeyTest {
         Integer expected = 3;
 
         // Act
-        Integer actual = monkey.test(0);
+        Integer actual = monkey.testDivisibility();
 
         // Assert
         assertEquals(expected, actual);
@@ -59,74 +39,58 @@ class MonkeyTest {
     @Test
     void shouldTestDivisibilityAndReturnTruthMonkey() {
         // Arrange
+        Monkey monkey = new Monkey(new ArrayDeque<>(List.of(new Item(23L))), "+", "19", 23, 2, 3, 0L);
         Integer expected = 2;
-        monkey.catchItem(23L);
 
         // Act
-        Integer actual = monkey.test(2);
+        Integer actual = monkey.testDivisibility();
 
         // Assert
         assertEquals(expected, actual);
     }
 
     @Test
-    void shouldReduceWorryByThree() {
-        // Arrange
-        Long expected = 1L;
-
-        // Act
-        monkey.reduceWorry(1);
-
-        assertEquals(expected, monkey.getItem(1));
-    }
-
-    @Test
-    void shouldOperateAndMultiply() {
-        // Arrange
-        Long expected = 38L;
-
-        // Act
-        monkey.operateWithMod(0, 107);
-
-        // Assert
-        assertEquals(expected, monkey.getItem(0));
-    }
-
-    @Test
-    void shouldOperateAndAdd() {
-        // Arrange
-        Monkey monkey = new Monkey(new ArrayList<>(List.of(2L, 3L)), "+", "19", 23, 2, 3, 0L);
-        Long expected = 22L;
-
-        // Act
-        monkey.operateWithMod(1, 107);
-
-        // Assert
-        assertEquals(expected, monkey.getItem(1));
-    }
-
-    @Test
-    void shouldOperateWhenItemIsOld() {
-        // Arrange
-        Monkey monkey = new Monkey(new ArrayList<>(List.of(2L, 4L)), "*", "old", 23, 2, 3, 0L);
-        Long expected = 16L;
-
-        // Act
-        monkey.operateWithMod(1, 107);
-
-        // Assert
-        assertEquals(expected, monkey.getItem(1));
-    }
-
-    @Test
-    void shouldInspect() {
+    void shouldInspectAndMultiply() {
         // Arrange
         Long expectedInspects = 1L;
+        Long expectedItemWorryLevel = 38L;
 
         // Act
-        monkey.inspect(0, 107);
+        monkey.inspect();
 
         // Assert
         assertEquals(expectedInspects, monkey.getInspects());
+        assertEquals(expectedItemWorryLevel, monkey.peekItem().getWorryLevel());
+    }
+
+
+    @Test
+    void shouldInspectAndAdd() {
+        // Arrange
+        Monkey monkey = new Monkey(new ArrayDeque<>(List.of(new Item(3L))), "+", "19", 23, 2, 3, 0L);
+        Long expectedInspects = 1L;
+        Long expectedItemWorryLevel = 22L;
+
+        // Act
+        monkey.inspect();
+
+        // Assert
+        assertEquals(expectedInspects, monkey.getInspects());
+        assertEquals(expectedItemWorryLevel, monkey.peekItem().getWorryLevel());
+    }
+
+    @Test
+    void shouldInspectWhenOperandIsOld() {
+        // Arrange
+        Monkey monkey = new Monkey(new ArrayDeque<>(List.of(new Item(4L))), "*", "old", 23, 2, 3, 0L);
+        Long expectedInspects = 1L;
+        Long expectedItemWorryLevel = 16L;
+
+        // Act
+        monkey.inspect();
+
+        // Assert
+        assertEquals(expectedInspects, monkey.getInspects());
+        assertEquals(expectedItemWorryLevel, monkey.peekItem().getWorryLevel());
     }
 }

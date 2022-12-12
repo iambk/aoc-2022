@@ -1,75 +1,76 @@
 package org.aoc.day11;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Queue;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 public class Monkey {
-    private List<Long> items;
+    private Queue<Item> items;
     private String operator;
-    private String operationValue;
-    private Integer divisibilityTest;
-    private Integer truthMonkey;
-    private Integer falseMonkey;
-    private Long inspects;
+    private String operand;
+    private int divisibilityTestNumber;
+    private int truthMonkey;
+    private int falseMonkey;
+    private long inspects;
 
-    public int getItemsSize() {
-        return items.size();
+    public boolean hasItems() {
+        return items.size() > 0;
     }
 
-    public Long getItem(int idx) {
-        return items.get(idx);
+    public Item peekItem() {
+        return items.peek();
     }
 
-    public void catchItem(Long item) {
+    public Item throwItem() {
+        return items.remove();
+    }
+
+    public void catchItem(Item item) {
         items.add(item);
     }
 
-    public void clearItems() {
-        items.clear();
-    }
-
-    public Integer getDivisibilityTest() {
-        return divisibilityTest;
+    public Integer getDivisibilityTestNumber() {
+        return divisibilityTestNumber;
     }
 
     public Long getInspects() {
         return inspects;
     }
 
-    public void inspect(int idx, long mod) {
-        operateWithMod(idx, mod);
+    public void inspect() {
+        operate();
         inspects++;
     }
 
-    public void operateWithMod(int idx, long mod) {
-        Long item = items.get(idx);
-        Long value;
-        if ("old".equals(operationValue)) value = item;
-        else value = Long.parseLong(operationValue);
-        switch (operator) {
-            case "*" -> items.set(idx, modularMultiplication(item, value, mod));
-            case "+" -> items.set(idx, modularAddition(item, value, mod));
-        }
+    private void operate() {
+        long value = ("old".equals(operand)) ? this.peekItem().getWorryLevel() : Long.parseLong(operand);
+        this.peekItem().changeWorryLevel(operator, value);
     }
 
-    public void reduceWorry(int idx) {
-        items.set(idx, items.get(idx) / 3L);
-    }
-
-    public int test(int idx) {
-        if (items.get(idx) % divisibilityTest == 0) return truthMonkey;
+    public int testDivisibility() {
+        if (this.peekItem().getWorryLevel() % divisibilityTestNumber == 0) return truthMonkey;
         else return falseMonkey;
     }
 
-    private Long modularMultiplication(long op1, long op2, long mod) {
-        return ((op1 % mod) * (op2 % mod)) % mod;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Monkey monkey = (Monkey) o;
+        return divisibilityTestNumber == monkey.divisibilityTestNumber
+                && truthMonkey == monkey.truthMonkey
+                && falseMonkey == monkey.falseMonkey
+                && inspects == monkey.inspects
+                && Arrays.equals(items.toArray(), monkey.items.toArray())
+                && operator.equals(monkey.operator)
+                && operand.equals(monkey.operand);
     }
 
-    private Long modularAddition(long op1, long op2, long mod) {
-        return ((op1 % mod) + (op2 % mod)) % mod;
+    @Override
+    public int hashCode() {
+        return Objects.hash(items, operator, operand, divisibilityTestNumber, truthMonkey, falseMonkey, inspects);
     }
 }

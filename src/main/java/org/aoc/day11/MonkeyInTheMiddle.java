@@ -2,12 +2,12 @@ package org.aoc.day11;
 
 import org.aoc.AOC;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Queue;
 import java.util.stream.Stream;
 
 public class MonkeyInTheMiddle implements AOC<List<Monkey>, Long> {
@@ -36,20 +36,24 @@ public class MonkeyInTheMiddle implements AOC<List<Monkey>, Long> {
     public List<Monkey> processInput(Stream<String> input) {
         List<String> inputList = input.filter(s -> !s.isBlank()).toList();
 
-        List<Long> items = null;
+        Queue<Item> items = null;
         String operator = null;
         String operationValue = null;
         int divisibilityTest = 0;
         int truthMonkey = 0;
         int falseMonkey;
-        Long inspects = 0L;
+        long inspects = 0L;
 
         List<Monkey> monkeys = new ArrayList<>();
         for (int idx = 0; idx < inputList.size(); idx++) {
             String command = inputList.get(idx);
             if (idx % 6 == 1) {
                 String[] split = command.substring(command.indexOf(":") + 1).split(",");
-                items = new ArrayList<>(Arrays.stream(split).map(String::trim).map(Long::parseLong).toList());
+                items = new ArrayDeque<>(Arrays.stream(split)
+                        .map(String::trim)
+                        .map(Long::parseLong)
+                        .map(Item::new)
+                        .toList());
             } else if (idx % 6 == 2) {
                 String[] split = command.split(" ");
                 operator = split[split.length - 2];
@@ -74,54 +78,39 @@ public class MonkeyInTheMiddle implements AOC<List<Monkey>, Long> {
 
             }
         }
+
         return monkeys;
     }
 
     @Override
     public Long partOne(List<Monkey> monkeys) {
-        for (int round = 1; round <= partOneRounds; round++) {
-            for (Monkey monkey : monkeys) {
-                for (int itemIndex = 0; itemIndex < monkey.getItemsSize(); itemIndex++) {
-                    monkey.inspect(itemIndex, Long.MAX_VALUE);
-                    monkey.reduceWorry(itemIndex);
-                    int monkeyToThrow = monkey.test(itemIndex);
-                    monkeys.get(monkeyToThrow).catchItem(monkey.getItem(itemIndex));
-                }
-                monkey.clearItems();
-            }
-        }
-
-        return getMonkeyBusiness(monkeys);
+        return getMonkeyBusiness(monkeys, partOneRounds, "divide", 3L);
     }
 
     @Override
     public Long partTwo(List<Monkey> monkeys) {
         long mod = monkeys.stream()
-                .map(Monkey::getDivisibilityTest)
+                .map(Monkey::getDivisibilityTestNumber)
                 .map(Integer::longValue)
                 .reduce(1L, (a, b) -> (a * b));
 
-        for (int round = 1; round <= partTwoRounds; round++) {
+        return getMonkeyBusiness(monkeys, partTwoRounds, "mod", mod);
+    }
+
+    private static Long getMonkeyBusiness(List<Monkey> monkeys, int rounds, String strategy, long reductionValue) {
+        for (int round = 1; round <= rounds; round++) {
             for (Monkey monkey : monkeys) {
-                for (int itemIndex = 0; itemIndex < monkey.getItemsSize(); itemIndex++) {
-                    monkey.inspect(itemIndex, mod);
-                    int monkeyToThrow = monkey.test(itemIndex);
-                    monkeys.get(monkeyToThrow).catchItem(monkey.getItem(itemIndex));
+                while (monkey.hasItems()) {
+                    monkey.inspect();
+                    monkey.peekItem().reduceWorryLevel(strategy, reductionValue);
+                    monkeys.get(monkey.testDivisibility()).catchItem(monkey.throwItem());
                 }
-                monkey.clearItems();
             }
         }
 
-        return getMonkeyBusiness(monkeys);
-    }
-
-    private static Long getMonkeyBusiness(List<Monkey> monkeys) {
-        Set<Long> sortedSet = new TreeSet<>(Comparator.reverseOrder());
-        sortedSet.addAll(monkeys.stream()
+        return monkeys.stream()
                 .map(Monkey::getInspects)
-                .toList());
-
-        return sortedSet.stream()
+                .sorted(Comparator.reverseOrder())
                 .limit(2)
                 .reduce(1L, (a, b) -> a * b);
     }

@@ -3,7 +3,7 @@ package org.aoc.day11;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,7 +44,7 @@ class MonkeyInTheMiddleTest {
                 "    If false: throw to monkey 1");
         Monkey monkey0 =
                 new Monkey(
-                        new ArrayList<>(List.of(79L, 98L)),
+                        new ArrayDeque<>(List.of(new Item(79L), new Item(98L))),
                         "*",
                         "19",
                         23,
@@ -53,7 +53,7 @@ class MonkeyInTheMiddleTest {
                         0L);
         Monkey monkey1 =
                 new Monkey(
-                        new ArrayList<>(List.of(54L, 65L, 75L, 74L)),
+                        new ArrayDeque<>(List.of(new Item(54L), new Item(65L), new Item(75L), new Item(74L))),
                         "+",
                         "6",
                         19,
@@ -62,7 +62,7 @@ class MonkeyInTheMiddleTest {
                         0L);
         Monkey monkey2 =
                 new Monkey(
-                        new ArrayList<>(List.of(79L, 60L, 97L)),
+                        new ArrayDeque<>(List.of(new Item(79L), new Item(60L), new Item(97L))),
                         "*",
                         "old",
                         13,
@@ -71,7 +71,7 @@ class MonkeyInTheMiddleTest {
                         0L);
         Monkey monkey3 =
                 new Monkey(
-                        new ArrayList<>(List.of(74L)),
+                        new ArrayDeque<>(List.of(new Item(74L))),
                         "+",
                         "3",
                         17,
